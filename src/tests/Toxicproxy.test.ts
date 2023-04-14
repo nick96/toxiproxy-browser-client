@@ -39,7 +39,7 @@ test("Toxiproxy Should populate", async () => {
 
   const uuid = randomUUID();
   const proxyName = `get-all-test-${uuid}`;
-  const proxyBodies = {};
+  const proxyBodies: any = {};
   proxyBodies[proxyName] = {
     listen: "localhost:0",
     name: proxyName,
@@ -62,7 +62,7 @@ test("Toxiproxy Should get all proxies", async () => {
 
   const uuid = randomUUID();
   const proxyName = `get-all-test-${uuid}`;
-  const proxyBodies = {};
+  const proxyBodies: any = {};
   proxyBodies[proxyName] = {
     listen: "localhost:0",
     name: proxyName,

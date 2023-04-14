@@ -1,22 +1,14 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es6",
-        "noImplicitAny": false,
-        "noUnusedParameters": true,
-        "noUnusedLocals": true,
-        "strictNullChecks": true,
-        "sourceMap": false,
-        "removeComments": true,
-        "declaration": true,
-        "rootDir": "./src",
-        "outDir": "./dist"
-    },
-    "filesGlob": [
-        "./src/**/*.ts"
-    ],
-    "exclude": [
-        "./example-code",
-        "./node_modules"
-    ]
+  "exclude": ["ui/", "example-code/"],
+  "compilerOptions": {
+    "incremental": true,
+    // "target": "es2016",
+    // "module": "commonjs",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true
+  }
 }

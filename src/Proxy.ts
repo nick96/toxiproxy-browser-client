@@ -41,6 +41,9 @@ export default class Proxy {
     this.listen = listen;
     this.upstream = upstream;
     this.enabled = enabled;
+    this.toxics = toxics.map(
+      (v: any) => new Toxic<ToxicAttributeTypes>(this, v)
+    );
     this.setToxics(toxics);
   }
 
