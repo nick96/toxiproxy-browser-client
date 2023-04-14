@@ -1,37 +1,30 @@
 {
-  "name": "toxiproxy-node-client",
-  "version": "v2.0.6",
-  "description": "Node Client for Toxiproxy",
+  "name": "toxiproxy-browser-client",
+  "version": "v0.0.1",
+  "description": "Browser Client for Toxiproxy",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "scripts": {
-    "clean": "del ./dist",
+    "clean": "rm -rf ./dist",
     "test": "npm run build && ava -v -s ./dist/tests/**/*.js",
-    "lint": "tslint ./src/**/*.ts && echo linted",
-    "build": "npm run clean && tsc && echo built",
+    "lint": "rome check .",
+    "format": "rome format --write --indent-style space .",
+    "build": "npm run clean && tsc",
     "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ihsw/toxiproxy-node-client.git"
+    "url": "git+https://github.com/nick96/toxiproxy-browser-client.git"
   },
-  "author": "Adrian Parker <ihsw.aparker@gmail.com>",
+  "author": "Nick Spain <nspain@fastmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ihsw/toxiproxy-node-client/issues"
+    "url": "https://github.com/nick96/toxiproxy-browser-client/issues"
   },
-  "homepage": "https://github.com/ihsw/toxiproxy-node-client#readme",
+  "homepage": "https://github.com/nick96/toxiproxy-browser-client#readme",
   "devDependencies": {
-    "@types/http-status": "^0.2.29",
-    "@types/request-promise-native": "^1.0.2",
-    "ava": "^0.17.0",
-    "del-cli": "^0.2.1",
-    "tslint": "^4.2.0",
-    "typescript": "^2.1.4"
-  },
-  "dependencies": {
-    "http-status": "^0.2.3",
-    "request": "^2.79.0",
-    "request-promise-native": "^1.0.3"
+    "ava": "^5.2.0",
+    "rome": "^12.0.0",
+    "typescript": "^5.0.4"
   }
 }
