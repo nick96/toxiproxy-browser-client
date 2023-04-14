@@ -1,9 +1,6 @@
 import { test } from "ava";
 import { createProxy, createToxic } from "../TestHelper";
-import {
-  Latency, Bandwidth,
-  Slowclose, Timeout, Slicer
-} from "../Toxic";
+import { Latency, Bandwidth, Slowclose, Timeout, Slicer } from "../Toxic";
 
 test("Proxy Should add a latency toxic", async (t) => {
   const { proxy } = await createProxy(t, "add-latency-toxic-test");
@@ -52,7 +49,7 @@ test("Proxy Should add a slicer toxic", async (t) => {
   const attributes = <Slicer>{
     average_size: 1000,
     delay: 1000,
-    size_variation: 1000
+    size_variation: 1000,
   };
   const toxic = await createToxic(t, proxy, "slicer", attributes);
   t.is(attributes.average_size, toxic.attributes.average_size);

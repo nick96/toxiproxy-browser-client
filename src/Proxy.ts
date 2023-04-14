@@ -1,16 +1,16 @@
-import * as rp from "request-promise-native";
-import * as HttpStatus from "http-status";
 import Toxiproxy from "./Toxiproxy";
 import Toxic, {
   AttributeTypes as ToxicAttributeTypes,
-  ToxicJson
+  ToxicJson,
 } from "./Toxic";
 import {
   ICreateProxyResponse,
   IGetProxyResponse,
-  IUpdateProxyBody, IUpdateProxyResponse,
-  ICreateToxicBody, ICreateToxicResponse,
-  IGetToxicsResponse
+  IUpdateProxyBody,
+  IUpdateProxyResponse,
+  ICreateToxicBody,
+  ICreateToxicResponse,
+  IGetToxicsResponse,
 } from "./interfaces";
 
 export interface ProxyJson {
@@ -30,7 +30,10 @@ export default class Proxy {
   enabled: boolean;
   toxics: Toxic<ToxicAttributeTypes>[];
 
-  constructor(toxiproxy: Toxiproxy, body: ICreateProxyResponse | IGetProxyResponse) {
+  constructor(
+    toxiproxy: Toxiproxy,
+    body: ICreateProxyResponse | IGetProxyResponse,
+  ) {
     this.toxiproxy = toxiproxy;
 
     const { name, listen, upstream, enabled, toxics } = body;
@@ -47,16 +50,18 @@ export default class Proxy {
       listen: this.listen,
       name: this.name,
       toxics: this.toxics.map((toxic) => toxic.toJson()),
-      upstream: this.upstream
+      upstream: this.upstream,
     };
   }
 
   setToxics(toxics: IGetToxicsResponse<any>) {
-    this.toxics = toxics.map((v: any) => new Toxic<ToxicAttributeTypes>(this, v));
+    this.toxics = toxics.map(
+      (v: any) => new Toxic<ToxicAttributeTypes>(this, v),
+    );
   }
 
   getHost() {
-      return this.toxiproxy.host;
+    return this.toxiproxy.host;
   }
 
   getPath() {
@@ -71,7 +76,9 @@ export default class Proxy {
         throw err;
       }
 
-      throw new Error(`Response status was not ${HttpStatus.NO_CONTENT}: ${err.statusCode}`);
+      throw new Error(
+        `Response status was not ${HttpStatus.NO_CONTENT}: ${err.statusCode}`,
+      );
     }
   }
 
@@ -80,13 +87,13 @@ export default class Proxy {
       const body = <IUpdateProxyBody>{
         enabled: this.enabled,
         listen: this.listen,
-        upstream: this.upstream
+        upstream: this.upstream,
       };
 
       const res = <IUpdateProxyResponse>await rp.post({
         body: body,
         json: true,
-        url: `${this.getPath()}`
+        url: `${this.getPath()}`,
       });
       return new Proxy(this.toxiproxy, res);
     } catch (err) {
@@ -94,7 +101,9 @@ export default class Proxy {
         throw err;
       }
 
-      throw new Error(`Response status was not ${HttpStatus.OK}: ${err.statusCode}`);
+      throw new Error(
+        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+      );
     }
   }
 
@@ -102,7 +111,7 @@ export default class Proxy {
     try {
       const res = <IGetToxicsResponse<any>>await rp.get({
         json: true,
-        url: `${this.getPath()}/toxics`
+        url: `${this.getPath()}/toxics`,
       });
 
       this.setToxics(res);
@@ -111,17 +120,22 @@ export default class Proxy {
         throw err;
       }
 
-      throw new Error(`Response status was not ${HttpStatus.OK}: ${err.statusCode}`);
+      throw new Error(
+        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+      );
     }
   }
 
   async addToxic<T>(body: ICreateToxicBody<T>): Promise<Toxic<T>> {
     try {
-      const toxic = await new Toxic(this, <ICreateToxicResponse<T>>await rp.post({
-        body: body,
-        json: true,
-        url: `${this.getPath()}/toxics`
-      }));
+      const toxic = await new Toxic(
+        this,
+        <ICreateToxicResponse<T>>await rp.post({
+          body: body,
+          json: true,
+          url: `${this.getPath()}/toxics`,
+        }),
+      );
 
       this.toxics.push(toxic);
       return toxic;
@@ -130,7 +144,9 @@ export default class Proxy {
         throw err;
       }
 
-      throw new Error(`Response status was not ${HttpStatus.OK}: ${err.statusCode}`);
+      throw new Error(
+        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+      );
     }
   }
 }

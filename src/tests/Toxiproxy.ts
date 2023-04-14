@@ -41,14 +41,18 @@ test("Toxiproxy Should populate", async () => {
     "get-all-test": {
       listen: "localhost:0",
       name: "get-all-test",
-      upstream: "localhost:6379"
-    }
+      upstream: "localhost:6379",
+    },
   };
-  const populateBody = Object.keys(proxyBodies).map((name) => proxyBodies[name]);
+  const populateBody = Object.keys(proxyBodies).map(
+    (name) => proxyBodies[name],
+  );
   const proxies = await toxiproxy.populate(populateBody);
 
   // clearing them all out
-  return Promise.all(Object.keys(proxies).map((name) => proxies[name].remove()));
+  return Promise.all(
+    Object.keys(proxies).map((name) => proxies[name].remove()),
+  );
 });
 
 test("Toxiproxy Should get all proxies", async (t) => {
@@ -62,10 +66,12 @@ test("Toxiproxy Should get all proxies", async (t) => {
     "get-all-test": {
       listen: "localhost:0",
       name: "get-all-test",
-      upstream: "localhost:6379"
-    }
+      upstream: "localhost:6379",
+    },
   };
-  const populateBody = Object.keys(proxyBodies).map((name) => proxyBodies[name]);
+  const populateBody = Object.keys(proxyBodies).map(
+    (name) => proxyBodies[name],
+  );
   await toxiproxy.populate(populateBody);
 
   // fetching them all
@@ -75,5 +81,7 @@ test("Toxiproxy Should get all proxies", async (t) => {
   }
 
   // clearing them all out
-  return Promise.all(Object.keys(proxies).map((name) => proxies[name].remove()));
+  return Promise.all(
+    Object.keys(proxies).map((name) => proxies[name].remove()),
+  );
 });

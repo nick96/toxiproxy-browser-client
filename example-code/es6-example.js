@@ -6,16 +6,15 @@ const getToxic = (type, attributes) => {
   const proxyBody = {
     listen: "localhost:0",
     name: "ihsw_test_redis_master",
-    upstream: "localhost:6379"
+    upstream: "localhost:6379",
   };
-  return toxiproxy.createProxy(proxyBody)
-    .then((proxy) => {
-      const toxicBody = {
-        attributes: attributes,
-        type: type
-      };
-      return proxy.addToxic(new toxiproxyClient.Toxic(proxy, toxicBody));
-    });
+  return toxiproxy.createProxy(proxyBody).then((proxy) => {
+    const toxicBody = {
+      attributes: attributes,
+      type: type,
+    };
+    return proxy.addToxic(new toxiproxyClient.Toxic(proxy, toxicBody));
+  });
 };
 
 // { attributes: { rate: 1000 },

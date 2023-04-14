@@ -7,7 +7,7 @@ import {
   IGetProxyResponse,
   IPopulateProxiesBody,
   IPopulateProxiesResponse,
-  IGetProxiesResponse
+  IGetProxiesResponse,
 } from "./interfaces";
 
 export interface Proxies {
@@ -23,10 +23,10 @@ export default class Toxiproxy {
   async createProxy(body: ICreateProxyBody): Promise<Proxy> {
     try {
       return new Proxy(this, <ICreateProxyResponse>await rp.post({
-        body: body,
-        json: true,
-        url: `${this.host}/proxies`
-      }));
+          body: body,
+          json: true,
+          url: `${this.host}/proxies`,
+        }));
     } catch (err) {
       if (!("statusCode" in err)) {
         throw err;
@@ -36,7 +36,9 @@ export default class Toxiproxy {
         throw new Error(`Proxy ${body.name} already exists`);
       }
 
-      throw new Error(`Response status was not ${HttpStatus.OK}: ${err.statusCode}`);
+      throw new Error(
+        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+      );
     }
   }
 
@@ -45,7 +47,7 @@ export default class Toxiproxy {
       const res = <IPopulateProxiesResponse>await rp.post({
         body: body,
         json: true,
-        url: `${this.host}/populate`
+        url: `${this.host}/populate`,
       });
 
       const proxies: Proxies = {};
@@ -59,22 +61,26 @@ export default class Toxiproxy {
         throw err;
       }
 
-      throw new Error(`Response status was not ${HttpStatus.OK}: ${err.statusCode}`);
+      throw new Error(
+        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+      );
     }
   }
 
   async get(name: string): Promise<Proxy> {
     try {
       return new Proxy(this, <IGetProxyResponse>await rp.get({
-        json: true,
-        url: `${this.host}/proxies/${name}`
-      }));
+          json: true,
+          url: `${this.host}/proxies/${name}`,
+        }));
     } catch (err) {
       if (!("statusCode" in err)) {
         throw err;
       }
 
-      throw new Error(`Response status was not ${HttpStatus.OK}: ${err.statusCode}`);
+      throw new Error(
+        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+      );
     }
   }
 
@@ -82,14 +88,16 @@ export default class Toxiproxy {
     try {
       return await rp.get({
         json: true,
-        url: `${this.host}/version`
+        url: `${this.host}/version`,
       });
     } catch (err) {
       if (!("statusCode" in err)) {
         throw err;
       }
 
-      throw new Error(`Response status was not ${HttpStatus.OK}: ${err.statusCode}`);
+      throw new Error(
+        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+      );
     }
   }
 
@@ -97,14 +105,16 @@ export default class Toxiproxy {
     try {
       return await rp.post({
         json: true,
-        url: `${this.host}/reset`
+        url: `${this.host}/reset`,
       });
     } catch (err) {
       if (!("statusCode" in err)) {
         throw err;
       }
 
-      throw new Error(`Response status was not ${HttpStatus.NO_CONTENT}: ${err.statusCode}`);
+      throw new Error(
+        `Response status was not ${HttpStatus.NO_CONTENT}: ${err.statusCode}`,
+      );
     }
   }
 
@@ -112,7 +122,7 @@ export default class Toxiproxy {
     try {
       const responses = <IGetProxiesResponse>await rp.get({
         json: true,
-        url: `${this.host}/proxies`
+        url: `${this.host}/proxies`,
       });
 
       const proxies: Proxies = {};
@@ -126,7 +136,9 @@ export default class Toxiproxy {
         throw err;
       }
 
-      throw new Error(`Response status was not ${HttpStatus.OK}: ${err.statusCode}`);
+      throw new Error(
+        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+      );
     }
   }
 }

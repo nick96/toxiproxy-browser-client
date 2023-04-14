@@ -1,7 +1,9 @@
 import {
-    Toxiproxy,
-    ICreateProxyBody,
-    Toxic, ICreateToxicBody, Bandwidth
+  Toxiproxy,
+  ICreateProxyBody,
+  Toxic,
+  ICreateToxicBody,
+  Bandwidth,
 } from "../dist/";
 
 const getToxic = async <T>(type: string, attributes: T): Promise<Toxic<T>> => {
@@ -9,13 +11,13 @@ const getToxic = async <T>(type: string, attributes: T): Promise<Toxic<T>> => {
   const proxyBody = <ICreateProxyBody>{
     listen: "localhost:0",
     name: "ihsw_test_redis_master",
-    upstream: "localhost:6379"
+    upstream: "localhost:6379",
   };
   const proxy = await toxiproxy.createProxy(proxyBody);
 
   const toxicBody = <ICreateToxicBody<T>>{
-      attributes: attributes,
-      type: type
+    attributes: attributes,
+    type: type,
   };
   return await proxy.addToxic(new Toxic(proxy, toxicBody));
 };

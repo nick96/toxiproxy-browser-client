@@ -6,5 +6,10 @@ export {
   Direction as ToxicDirection,
   Type as ToxicType,
   AttributeTypes as ToxicAttributeTypes,
-  Latency, Down, Bandwidth, Slowclose, Timeout, Slicer
+  Latency,
+  Down,
+  Bandwidth,
+  Slowclose,
+  Timeout,
+  Slicer,
 } from "./Toxic";

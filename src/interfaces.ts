@@ -1,7 +1,4 @@
-import {
-  Type as ToxicType,
-  Direction as ToxicDirection
-} from "./Toxic";
+import { Type as ToxicType, Direction as ToxicDirection } from "./Toxic";
 
 // misc
 export interface IProxyBody {
@@ -27,7 +24,7 @@ export interface IToxicBody<T> {
   attributes: T;
 }
 
-export interface IToxicResponse<T> extends IToxicBody<T> { }
+export interface IToxicResponse<T> extends IToxicBody<T> {}
 
 // request & responses for GET /proxies
 export interface IGetProxiesResponse {
@@ -35,18 +32,18 @@ export interface IGetProxiesResponse {
 }
 
 // request & responses for POST /proxies
-export interface ICreateProxyBody extends IProxyBody { }
-export interface ICreateProxyResponse extends IProxyResponse { }
+export interface ICreateProxyBody extends IProxyBody {}
+export interface ICreateProxyResponse extends IProxyResponse {}
 
 // request & responses for POST /populate
-export interface IPopulateProxiesBody extends Array<IProxyBody> { }
+export interface IPopulateProxiesBody extends Array<IProxyBody> {}
 
 export interface IPopulateProxiesResponse {
   proxies: IProxyResponse[];
 }
 
 // request & responses for GET /proxies/{proxy}
-export interface IGetProxyResponse extends IProxyResponse { }
+export interface IGetProxyResponse extends IProxyResponse {}
 
 // request & responses for POST /proxies/{proxy}
 export interface IUpdateProxyBody {
@@ -55,24 +52,24 @@ export interface IUpdateProxyBody {
   upstream: string;
 }
 
-export interface IUpdateProxyResponse extends IProxyResponse { }
+export interface IUpdateProxyResponse extends IProxyResponse {}
 
 // request & responses for DELETE /proxies/{proxy}
 // intentionally left blank
 
 // request & responses for GET /proxies/{proxy}/toxics
-export interface IGetToxicsResponse<T> extends Array<IToxicResponse<T>> { }
+export interface IGetToxicsResponse<T> extends Array<IToxicResponse<T>> {}
 
 // request & responses for POST /proxies/{proxy}/toxics
-export interface ICreateToxicBody<T> extends IToxicBody<T> { }
-export interface ICreateToxicResponse<T> extends IToxicResponse<T> { }
+export interface ICreateToxicBody<T> extends IToxicBody<T> {}
+export interface ICreateToxicResponse<T> extends IToxicResponse<T> {}
 
 // request & responses for GET /proxies/{proxy}/toxics/{toxic}
-export interface IGetToxicResponse<T> extends IToxicResponse<T> { }
+export interface IGetToxicResponse<T> extends IToxicResponse<T> {}
 
 // request & responses for POST /proxies/{proxy}/toxics/{toxic}
-export interface IUpdateToxicBody<T> extends IToxicBody<T> { }
-export interface IUpdateToxicResponse<T> extends IToxicResponse<T> { }
+export interface IUpdateToxicBody<T> extends IToxicBody<T> {}
+export interface IUpdateToxicResponse<T> extends IToxicResponse<T> {}
 
 // request & responses for DELETE /proxies/{proxy}/toxics/{toxic}
 // intentionally left blank

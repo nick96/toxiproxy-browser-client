@@ -4,12 +4,14 @@ import Proxy from "./Proxy";
 import {
   ICreateToxicBody,
   IGetToxicResponse,
-  IUpdateToxicBody, IUpdateToxicResponse
+  IUpdateToxicBody,
+  IUpdateToxicResponse,
 } from "./interfaces";
 
 export type Direction = "upstream" | "downstream";
 
-export type Type = "latency"
+export type Type =
+  | "latency"
   | "down"
   | "bandwidth"
   | "slow_close"
@@ -21,7 +23,7 @@ export interface Latency {
   jitter: number;
 }
 
-export interface Down { }
+export interface Down {}
 
 export interface Bandwidth {
   rate: number;
@@ -41,7 +43,13 @@ export interface Slicer {
   delay: number;
 }
 
-export type AttributeTypes = Latency | Down | Bandwidth | Slowclose | Timeout | Slicer;
+export type AttributeTypes =
+  | Latency
+  | Down
+  | Bandwidth
+  | Slowclose
+  | Timeout
+  | Slicer;
 
 export interface ToxicJson<T> {
   name: string;
@@ -80,7 +88,7 @@ export default class Toxic<T> {
       name: this.name,
       stream: this.stream,
       toxicity: this.toxicity,
-      type: this.type
+      type: this.type,
     };
   }
 
@@ -109,7 +117,9 @@ export default class Toxic<T> {
         throw err;
       }
 
-      throw new Error(`Response status was not ${HttpStatus.NO_CONTENT}: ${err.statusCode}`);
+      throw new Error(
+        `Response status was not ${HttpStatus.NO_CONTENT}: ${err.statusCode}`,
+      );
     }
   }
 
@@ -117,7 +127,7 @@ export default class Toxic<T> {
     try {
       const res = <IGetToxicResponse<T>>await rp.get({
         json: true,
-        url: `${this.getPath()}`
+        url: `${this.getPath()}`,
       });
       this.parseBody(res);
 
@@ -127,7 +137,9 @@ export default class Toxic<T> {
         throw err;
       }
 
-      throw new Error(`Response status was not ${HttpStatus.OK}: ${err.statusCode}`);
+      throw new Error(
+        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+      );
     }
   }
 
@@ -137,7 +149,7 @@ export default class Toxic<T> {
       const res = <IUpdateToxicResponse<T>>await rp.post({
         body: body,
         json: true,
-        url: `${this.getPath()}`
+        url: `${this.getPath()}`,
       });
       this.parseBody(res);
 
@@ -147,7 +159,9 @@ export default class Toxic<T> {
         throw err;
       }
 
-      throw new Error(`Response status was not ${HttpStatus.OK}: ${err.statusCode}`);
+      throw new Error(
+        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+      );
     }
   }
 }
