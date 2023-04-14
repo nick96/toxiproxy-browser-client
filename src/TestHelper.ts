@@ -1,4 +1,3 @@
-import { ContextualTestContext } from "ava";
 import Toxiproxy from "./Toxiproxy";
 import Proxy from "./Proxy";
 import Toxic from "./Toxic";
@@ -12,8 +11,7 @@ export interface ICreateProxyHelper {
 export const toxiproxyUrl = "http://localhost:8474";
 
 export const createProxy = async (
-  t: ContextualTestContext,
-  name: string,
+  name: string
 ): Promise<ICreateProxyHelper> => {
   const toxiproxy = new Toxiproxy(toxiproxyUrl);
   const body = <ICreateProxyBody>{
@@ -22,16 +20,15 @@ export const createProxy = async (
     upstream: "localhost:6379",
   };
   const proxy = await toxiproxy.createProxy(body);
-  t.is(body.name, proxy.name);
+  expect(body.name).toEqual(proxy.name);
 
   return { proxy, toxiproxy };
 };
 
 export const createToxic = async <T>(
-  t: ContextualTestContext,
   proxy: Proxy,
   type: string,
-  attributes: T,
+  attributes: T
 ): Promise<Toxic<T>> => {
   const body = <ICreateToxicBody<T>>{
     attributes: attributes,
@@ -39,8 +36,8 @@ export const createToxic = async <T>(
   };
 
   const toxic = await proxy.addToxic(body);
-  t.is(body.type, toxic.type);
-  t.is(toxic.name, proxy.toxics[proxy.toxics.length - 1].name);
+  expect(body.type).toEqual(toxic.type);
+  expect(toxic.name).toEqual(proxy.toxics[proxy.toxics.length - 1].name);
 
   return toxic;
 };

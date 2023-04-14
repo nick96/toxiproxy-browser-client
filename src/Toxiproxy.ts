@@ -1,5 +1,3 @@
-import * as rp from "request-promise-native";
-import * as HttpStatus from "http-status";
 import Proxy from "./Proxy";
 import {
   ICreateProxyBody,
@@ -21,124 +19,77 @@ export default class Toxiproxy {
   }
 
   async createProxy(body: ICreateProxyBody): Promise<Proxy> {
-    try {
-      return new Proxy(this, <ICreateProxyResponse>await rp.post({
-          body: body,
-          json: true,
-          url: `${this.host}/proxies`,
-        }));
-    } catch (err) {
-      if (!("statusCode" in err)) {
-        throw err;
-      }
-
-      if (err.statusCode === HttpStatus.CONFLICT) {
-        throw new Error(`Proxy ${body.name} already exists`);
-      }
-
+    const resp = await fetch(`${this.host}/proxies`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    if (resp.status == 409) {
+      throw new Error(`Proxy ${body.name} already exists`);
+    } else if (resp.status != 201) {
       throw new Error(
-        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+        `Response status was not 201 Created: ${resp.status} ${resp.statusText}`
       );
     }
+    const proxy = (await resp.json()) as ICreateProxyResponse;
+    return new Proxy(this, proxy);
   }
 
   async populate(body: IPopulateProxiesBody): Promise<Proxies> {
-    try {
-      const res = <IPopulateProxiesResponse>await rp.post({
-        body: body,
-        json: true,
-        url: `${this.host}/populate`,
-      });
-
-      const proxies: Proxies = {};
-      for (const proxyResponse of res.proxies) {
-        proxies[proxyResponse.name] = new Proxy(this, proxyResponse);
-      }
-
-      return proxies;
-    } catch (err) {
-      if (!("statusCode" in err)) {
-        throw err;
-      }
-
+    const resp = await fetch(`${this.host}/populate`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    if (resp.status != 201) {
       throw new Error(
-        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+        `Response status was not 201 Created: ${resp.status} ${resp.statusText}`
       );
     }
+    const responseBody = (await resp.json()) as IPopulateProxiesResponse;
+    const proxies: Proxies = {};
+    for (const proxy of responseBody.proxies) {
+      proxies[proxy.name] = new Proxy(this, proxy);
+    }
+    return proxies;
   }
 
   async get(name: string): Promise<Proxy> {
-    try {
-      return new Proxy(this, <IGetProxyResponse>await rp.get({
-          json: true,
-          url: `${this.host}/proxies/${name}`,
-        }));
-    } catch (err) {
-      if (!("statusCode" in err)) {
-        throw err;
-      }
-
+    const resp = await fetch(`${this.host}/proxies/${name}`);
+    if (!resp.ok) {
       throw new Error(
-        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+        `Response status was not 200 OK: ${resp.status} ${resp.statusText}`
       );
     }
+    const body = (await resp.json()) as IGetProxyResponse;
+    return new Proxy(this, body);
   }
 
   async getVersion(): Promise<string> {
-    try {
-      return await rp.get({
-        json: true,
-        url: `${this.host}/version`,
-      });
-    } catch (err) {
-      if (!("statusCode" in err)) {
-        throw err;
-      }
-
-      throw new Error(
-        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
-      );
-    }
+    const resp = await fetch(`${this.host}/version`);
+    const version = await resp.text();
+    return version;
   }
 
   async reset(): Promise<void> {
-    try {
-      return await rp.post({
-        json: true,
-        url: `${this.host}/reset`,
-      });
-    } catch (err) {
-      if (!("statusCode" in err)) {
-        throw err;
-      }
-
+    const resp = await fetch(`${this.host}/reset`, { method: "POST" });
+    if (resp.status !== 204) {
       throw new Error(
-        `Response status was not ${HttpStatus.NO_CONTENT}: ${err.statusCode}`,
+        `Response status was not 204 No Content: ${resp.status} ${resp.statusText}`
       );
     }
   }
 
   async getAll(): Promise<Proxies> {
-    try {
-      const responses = <IGetProxiesResponse>await rp.get({
-        json: true,
-        url: `${this.host}/proxies`,
-      });
-
-      const proxies: Proxies = {};
-      for (const name in responses) {
-        proxies[name] = new Proxy(this, responses[name]);
-      }
-
-      return proxies;
-    } catch (err) {
-      if (!("statusCode" in err)) {
-        throw err;
-      }
-
+    const resp = await fetch(`${this.host}/proxies`);
+    if (resp.status !== 200) {
       throw new Error(
-        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+        `Response status was not 200 OK: ${resp.status} ${resp.statusText}`
       );
     }
+    const body = (await resp.json()) as IGetProxiesResponse;
+    const proxies: Proxies = {};
+    for (const name in body) {
+      proxies[name] = new Proxy(this, body[name]);
+    }
+    return proxies;
   }
 }

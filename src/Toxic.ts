@@ -1,5 +1,3 @@
-import * as rp from "request-promise-native";
-import * as HttpStatus from "http-status";
 import Proxy from "./Proxy";
 import {
   ICreateToxicBody,
@@ -101,67 +99,46 @@ export default class Toxic<T> {
   }
 
   async remove(): Promise<void> {
-    try {
-      await rp.delete({ url: this.getPath() });
-
-      for (const key in this.proxy.toxics) {
-        const toxic = this.proxy.toxics[key];
-        if (toxic.name === this.name) {
-          delete this.proxy.toxics[key];
-        }
-      }
-
-      return Promise.resolve();
-    } catch (err) {
-      if (!("statusCode" in err)) {
-        throw err;
-      }
-
+    const response = await fetch(this.getPath(), { method: "DELETE" });
+    if (response.status !== 204) {
       throw new Error(
-        `Response status was not ${HttpStatus.NO_CONTENT}: ${err.statusCode}`,
+        `Response status was not 204 No Content: ${response.status} ${response.statusText}`
       );
+    }
+
+    for (const key in this.proxy.toxics) {
+      const toxic = this.proxy.toxics[key];
+      if (toxic.name === this.name) {
+        delete this.proxy.toxics[key];
+      }
     }
   }
 
   async refresh(): Promise<void> {
-    try {
-      const res = <IGetToxicResponse<T>>await rp.get({
-        json: true,
-        url: `${this.getPath()}`,
-      });
-      this.parseBody(res);
-
-      return Promise.resolve();
-    } catch (err) {
-      if (!("statusCode" in err)) {
-        throw err;
-      }
-
+    const response = await fetch(this.getPath());
+    if (!response.ok) {
       throw new Error(
-        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+        `Response status was not 200 OK: ${response.status} ${response.statusText}`
       );
     }
+    const body = (await response.json()) as IGetToxicResponse<any>;
+    this.parseBody(body);
   }
 
   async update(): Promise<void> {
-    try {
-      const body = <IUpdateToxicBody<T>>this.toJson();
-      const res = <IUpdateToxicResponse<T>>await rp.post({
-        body: body,
-        json: true,
-        url: `${this.getPath()}`,
-      });
-      this.parseBody(res);
+    const body = <IUpdateToxicBody<T>>this.toJson();
+    const response = await fetch(this.getPath(), {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
 
-      return Promise.resolve();
-    } catch (err) {
-      if (!("statusCode" in err)) {
-        throw err;
-      }
-
+    if (!response.ok) {
       throw new Error(
-        `Response status was not ${HttpStatus.OK}: ${err.statusCode}`,
+        `Response status was not 200 OK: ${response.status} ${response.statusText}`
       );
     }
+
+    const responseBody = (await response.json()) as IUpdateToxicResponse<any>;
+    this.parseBody(responseBody);
   }
 }
